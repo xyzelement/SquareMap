@@ -7,39 +7,40 @@
 <%@ page import="java.util.Iterator"%>
 
 <%
-	Collection<Item> list 
-	  = (Collection<Item>)session.getAttribute("list");
+	//Collection<Item> list 
+	//  = (Collection<Item>)session.getAttribute("list");
 
 
-	int cycle = Integer.parseInt(request.getParameter("cycle"));
+	//int cycle = Integer.parseInt(request.getParameter("cycle"));
 	String token = (String)session.getAttribute("token");
 
-	History h = History.getHistory(token, cycle);
-	if (cycle == 0) {
-		list = h.getItems();
+	History h;
+	if(request.getParameter("older_than") !=null) {
+		System.out.println(request.getParameter("older_than"));
+		int olderThan = Integer.parseInt(request.getParameter("older_than"));
+		pageContext.getOut().append("Looking for stuff older than: " + olderThan);
+		
+		//EMTODO: olderThan is completelybackwards in 4sq so this is busted.
+		// We need to do this:
+		// for the original history backfill: do the cycle offset stuff. Once it's in the
+		// db, assume that everything historical is there.
+		// for update (ie puling in new stuff) do the same thing (offset 1), keeping track
+		// of latest known item. Once the update crosses what we already know, stop updating.
+		
+		h = History.getHistory(token, olderThan);
 	} else {
-		list.addAll(h.getItems());		
+		h = History.getHistory(token, 0/*cycle*/);
 	}
-	session.setAttribute("list", list);
+	
+	Collection<Item> list = h.getItems();
 	
 	pageContext.getOut().append("Downloaded: " 
 		+ list.size() + " of " + h.response.checkins.count);
 	
-	if (list.size() < h.response.checkins.count) {
-		String url = "history_downloader.jsp?cycle="+(cycle+1);
-		//response.sendRedirect(url);
-		%>
-		<script language="javascript" type="text/javascript">
-			window.setTimeout('window.location="<%= url %>"; ',1000);
-		</script>
-		<%
-	} else {
 		
-		System.out.println("xxxxxxxxx");
-		ItemsOut its = new ItemsOut(list);
-		System.out.println("yyyyy");
-		//pageContext.getOut().append(its.toString());
-		System.out.println("zzzz");
-	}
+	ItemsOut its = new ItemsOut(list);
+	pageContext.getOut().append(its.toHtml());
+	its.save();
+
 	%>	
 	

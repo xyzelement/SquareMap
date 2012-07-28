@@ -7,13 +7,10 @@ import com.google.gson.Gson;
 
 public class oauth_connector {
 	
-	//oauth placeholder
-
-	// Prod App
-	private static String eds_token = "";
-	private static String client_id     = "";
-	private static String client_secret = "";
-	private static String redirect_url  = "";
+	// Local Test - these aren't real heavy secrets :)
+	private static String client_id     = "CMVLLKHGSS2UUM0Q0YIAUTEIILXB4ISRDSGOF4SM5FT5Q1UD";
+	private static String client_secret = "RSOLJKVKC1YS0FQNZKSTJEDLWAW4B3T5Q0CAG302ZW4SCWWO";
+	private static String redirect_url  = "http://localhost:8888/oauth.jsp";
 	
 	public static String getLoginUrl() {
 		return "https://foursquare.com/oauth2/authenticate"

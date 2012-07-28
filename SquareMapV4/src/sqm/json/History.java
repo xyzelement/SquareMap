@@ -31,9 +31,16 @@ public class History {
 		return out + "</UL>";
 	}
 	
-	public static History getHistory(String token, int offset) {
-		String url = "https://api.foursquare.com/v2/users/self/checkins?oauth_token="+token+"&v=20120601&limit=100&offset="+(offset*100);
+	public static History getHistory(String token, long olderThan) {
+		
+		
+		String url = "https://api.foursquare.com/v2/users/self/checkins?oauth_token="+token+"&v=20120601&limit=100";
+		if (olderThan != 0) {
+			url += "&beforeTimestamp=" + olderThan;
+		}
+		System.out.println("Trying to access:" +url);
 		String json = UrlFetcher.fetch(url);
+			
 		Gson gson = new Gson();
 		History h = gson.fromJson(json, History.class);
 		return h;				

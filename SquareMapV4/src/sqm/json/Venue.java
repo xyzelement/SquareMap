@@ -10,11 +10,20 @@ public class Venue {
 	
 	
 	public Venue(){};
-	public String toString() {
+	public String getCategory() {
 		String cat = "[no cat]";
 		if (!categories.isEmpty()) {
 			cat =categories.iterator().next().toString();
 		}
-		return name+" "+location+":" + cat;
+		return cat;
+	}
+	public String toString() {
+
+		return name+" "+location+":" + getCategory();
+	}
+	
+	public String toHtml() {
+		return name + " : " + getCategory();
+			
 	}
 }

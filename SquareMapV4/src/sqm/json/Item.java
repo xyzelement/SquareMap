@@ -4,9 +4,6 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.google.gson.Gson;
-
-
 
 public class Item {
 	public Venue venue;
@@ -26,5 +23,9 @@ public class Item {
 	
 	public String toString() {	
 		return venue + " " + formatedDate();
+	}
+	
+	public String toHtml(){
+		return "<li>"+formatedDate() + " * " + venue.toHtml() + "</li>";
 	}
 }
